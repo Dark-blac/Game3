@@ -7,10 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.Random;
 
 
-public class GameActivity extends Activity implements View.OnClickListener{
+public class GameActivity extends Activity implements View.OnClickListener {
 
     Button buttonObjectChoice1, buttonObjectChoice2, buttonObjectChoice3, buttonBack;
     TextView textObjectPartA, textObjectPartB, textObjectScore;
@@ -40,9 +41,10 @@ public class GameActivity extends Activity implements View.OnClickListener{
 
     }//onCreate ends here
 
-    @Override @SuppressLint("NonConstantResourceId")
+    @Override
+    @SuppressLint("NonConstantResourceId")
     public void onClick(View view) {
-        int answerGiven=0;
+        int answerGiven = 0;
         switch (view.getId()) {
 
             case R.id.buttonChoice1:
@@ -68,7 +70,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
 
     }
 
-    void setQuestion(){
+    void setQuestion() {
         int numberRange = currentLevel * 3;
         Random randInt = new Random();
 
@@ -79,8 +81,8 @@ public class GameActivity extends Activity implements View.OnClickListener{
         partB++;
 
         correctAnswer = partA * partB;
-        int wrongAnswer1 = correctAnswer-2;
-        int wrongAnswer2 = correctAnswer+2;
+        int wrongAnswer1 = correctAnswer - 2;
+        int wrongAnswer2 = correctAnswer + 2;
 
         textObjectPartA.setText(String.valueOf(partA));
         textObjectPartB.setText(String.valueOf(partB));
@@ -88,7 +90,7 @@ public class GameActivity extends Activity implements View.OnClickListener{
         //set the multi choice buttons
         //A number between 0 and 2
         int buttonLayout = randInt.nextInt(3);
-        switch (buttonLayout){
+        switch (buttonLayout) {
             case 0:
                 buttonObjectChoice1.setText(String.valueOf(correctAnswer));
                 buttonObjectChoice2.setText(String.valueOf(wrongAnswer1));
@@ -110,12 +112,17 @@ public class GameActivity extends Activity implements View.OnClickListener{
     }
 
     @SuppressLint("SetTextI18n")
-    void updateScoreAndLevel(int answerGiven){
+    void updateScoreAndLevel(int answerGiven) {
 
-        if(isCorrect(answerGiven)){
+        if (isCorrect(answerGiven)) {
             currentScore++;
+
+            if (currentScore > HighScore.getHighScore(this)) {
+                HighScore.setHighScore(this, currentScore);
+            }
+
             currentLevel++;
-        }else{
+        } else {
             currentScore = 0;
             currentLevel = 1;
         }
@@ -123,14 +130,14 @@ public class GameActivity extends Activity implements View.OnClickListener{
         textObjectScore.setText("Score: " + currentScore);
     }
 
-    boolean isCorrect(int answerGiven){
+    boolean isCorrect(int answerGiven) {
         boolean correctTrueOrFalse;
-        if(answerGiven == correctAnswer){
-            Toast.makeText(getApplicationContext(), "Well done!", Toast.LENGTH_LONG).show();
-            correctTrueOrFalse=true;
-        }else{//Uh-oh!
-            Toast.makeText(getApplicationContext(), "Sorry", Toast.LENGTH_LONG).show();
-            correctTrueOrFalse=false;
+        if (answerGiven == correctAnswer) {
+            Toast.makeText(getApplicationContext(), "Well done!", Toast.LENGTH_SHORT).show();
+            correctTrueOrFalse = true;
+        } else {//Uh-oh!
+            Toast.makeText(getApplicationContext(), "Sorry", Toast.LENGTH_SHORT).show();
+            correctTrueOrFalse = false;
         }
 
         return correctTrueOrFalse;
